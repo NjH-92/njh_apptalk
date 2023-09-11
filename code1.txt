@@ -1,0 +1,168 @@
+server.js
+// server.js
+const express = require('express');
+const http = require('http');
+const socketIo = require('socket.io');
+
+const app = express();
+const server = http.createServer(app);
+const io = socketIo(server);
+
+app.use(express.static(__dirname + '/public'));
+
+io.on('connection', (socket) => {
+  console.log('User connected');
+
+  socket.on('message', (data) => {
+    io.emit('message', data);
+  });
+
+  socket.on('disconnect', () => {
+    console.log('User disconnected');
+  });
+});
+
+const PORT = process.env.PORT || 3000;
+server.listen(PORT, () => {
+  console.log(`Server is listening on port ${PORT}`);
+});
+
+
+index.html
+<!-- public/index.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="styles.css">
+  <title>Chat App</title>
+</head>
+<body>
+  <div id="chat">
+    <div id="messages-container">
+      <ul id="messages"></ul>
+    </div>
+    <form id="form" action="">
+      <input id="input" placeholder="Type your message..." />
+      <button id="ryuuen">Send</button>
+    </form>
+  </div>
+
+  <script src="/socket.io/socket.io.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>
+
+
+styles.css
+/* public/styles.css */
+body {
+  font-family: Arial, Helvetica, sans-serif;
+  background-color: #f0f0f0;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+}
+
+#chat {
+  width: 80%;
+  max-width: 600px;
+  padding: 20px;
+  border: 1px solid #ccc;
+  border-radius: 10px;
+  background-color: white;
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+}
+
+#messages-container {
+  max-height: 400px;
+  overflow-y: auto;
+}
+
+#messages {
+  list-style-type: none;
+  padding: 0;
+}
+
+#messages li {
+  clear: both; /* Ajout pour empêcher les messages de se superposer */
+  padding: 10px;
+  border-radius: 10px;
+  margin-bottom: 10px;
+  word-wrap: break-word;
+  display: inline-block;
+  max-width: 80%;
+}
+
+.message-incoming {
+  background-color: #d4edda;
+  text-align: right;
+  color: #155724;
+  float: right;
+}
+
+.message-outgoing {
+  background-color: #f8f9fa;
+  text-align: left;
+  color: #343a40;
+  float: left;
+}
+
+#input {
+  width: 85%; /* Augmentation de la largeur de l'input */
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  outline: none;
+}
+
+#ryuuen {
+  padding: 10px 15px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+#ryuuen:hover {
+  background-color: #5fd74a;
+}
+
+
+script.js
+// public/script.js
+const socket = io();
+
+const form = document.getElementById('form');
+const input = document.getElementById('input');
+const messages = document.getElementById('messages');
+
+form.addEventListener('submit', (e) => {
+  e.preventDefault();
+  if (input.value) {
+    socket.emit('message', input.value);
+    input.value = '';
+  }
+});
+
+socket.on('message', (data) => {
+  const li = document.createElement('li');
+  li.textContent = data;
+
+  // Ajoutez la classe de style appropriée en fonction de l'émetteur du message
+  if (data.startsWith('You: ')) {
+    li.classList.add('message-outgoing');
+  } else {
+    li.classList.add('message-incoming');
+  }
+
+  messages.appendChild(li);
+
+  // Faites défiler automatiquement vers le bas pour voir les nouveaux messages
+  messages.scrollTop = messages.scrollHeight;
+});

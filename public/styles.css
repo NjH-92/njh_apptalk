@@ -1,0 +1,85 @@
+/* public/styles.css */
+body {
+  font-family: Arial, Helvetica, sans-serif;
+  background-color: #f0f0f0;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+}
+
+#chat {
+  width: 80%;
+  max-width: 600px;
+  padding: 20px;
+  border: 1px solid #ccc;
+  border-radius: 10px;
+  background-color: white;
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+}
+
+#messages-container {
+  max-height: 400px;
+  overflow-y: auto;
+}
+
+#messages {
+  list-style-type: none;
+  padding: 0;
+}
+
+#messages li {
+  clear: both; /* Ajout pour empêcher les messages de se superposer */
+  padding: 10px;
+  border-radius: 10px;
+  margin-bottom: 10px;
+  word-wrap: break-word;
+  display: inline-block;
+  max-width: 80%;
+}
+
+.message-incoming {
+  background-color: #f8f9fa;
+  text-align: right;
+  color: #155724;
+  float: right;
+}
+
+.message-outgoing {
+  background-color: #90abc4;
+  text-align: left;
+  color: #343a40;
+  float: left;
+}
+
+#username {
+  width: 95%; /* Ajuster la largeur de l'input du nom d'utilisateur */
+  padding: 10px;
+  margin-bottom: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  outline: none;
+}
+
+#input {
+  width: 85%; /* Augmentation de la largeur de l'input */
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  outline: none;
+}
+
+#ryuuen {
+  padding: 10px 15px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+#ryuuen:hover {
+  background-color: #5fd74a;
+}
